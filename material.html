@@ -1,0 +1,484 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Material Class – pyne.material &mdash; PyNE v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/altered_nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNE v0.1 documentation" href="index.html" />
+    <link rel="next" title="PyNE Developemnt Team" href="dev_team.html" />
+    <link rel="prev" title="Nuclide Naming Module – pyne.nucname" href="nucname.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="dev_team.html" title="PyNE Developemnt Team"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nucname.html" title="Nuclide Naming Module – pyne.nucname"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyNE v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="material-class-pyne-material">
+<h1>Material Class &#8211; <tt class="xref py py-mod docutils literal"><span class="pre">pyne.material</span></tt><a class="headerlink" href="#material-class-pyne-material" title="Permalink to this headline">¶</a></h1>
+<p>This moudule contains the Material class which is used to represent nuclear
+materials throughout PyNE.</p>
+<p id="material">All functionality may be found in the <tt class="docutils literal"><span class="pre">material</span></tt> package:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyne.material</span> <span class="kn">import</span> <span class="n">Material</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="pyne.material.Material">
+<em class="property">class </em><tt class="descclassname">pyne.material.</tt><tt class="descname">Material</tt><a class="headerlink" href="#pyne.material.Material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material composed of nuclides.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>comp</strong> : dict or str</p>
+<blockquote>
+<div><p>This is the input nuclide component dictionary.
+This dictionary need not be normalized; Material initialization will
+automatically renormalize the stream.  Thus the comp simply is a dictionary
+of relative weights.  The keys of comp must be integers representing
+nuclides in zzaaam-form.  The values are floats for each nuclide&#8217;s weight 
+fraction.</p>
+<p>If a string is provided instead of a dictionary, then Material will
+read in the comp vector from a file at the string&#8217;s location.  This  
+either plaintext or hdf5 files.</p>
+<p>If no comp is provided, an empty Material object is constructed.</p>
+</div></blockquote>
+<p><strong>mass</strong> : float, optional</p>
+<blockquote>
+<div><p>This is the mass of the new stream. If the mass provided
+is negative (default -1.0) then the mass of the new stream is calculated from 
+the sum of compdict&#8217;s components before normalization.  If the mass here
+is positive or zero, then this mass overrides the calculated one.</p>
+</div></blockquote>
+<p><strong>name</strong> : str, optional</p>
+<blockquote class="last">
+<div><p>A string label for the material.  Helpful for large numbers of 
+streams. Default &#8216;&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="attribute">
+<dt id="pyne.material.Material.atomic_weight">
+<tt class="descname">atomic_weight</tt><a class="headerlink" href="#pyne.material.Material.atomic_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns the atomic weight of the comp of this material.  Note that this is 
+only a rough estimate since this function is not yet coupled with measured atomic weights.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>atomic_weight</strong> : float</p>
+<blockquote class="last">
+<div><p>Atomic weight in [amu].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.load_from_hdf5">
+<tt class="descname">load_from_hdf5</tt><a class="headerlink" href="#pyne.material.Material.load_from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Material object may be initialized from an HDF5 file.
+The HDF5 representation of a Material is a group that holds several 
+extendable array datasets.  One array is entitled &#8220;Mass&#8221; while the other datasets
+are nuclide names in LLAAAM form (&#8220;U235&#8221;, &#8220;NP237&#8221;, <em>etc</em>).  For example:</p>
+<div class="highlight-python"><pre>File.h5 (file)
+    |-- Material (group)
+        |-- Mass (array)
+        |-- H1 (array)
+        |-- O16 (array)
+        |-- U235 (array)
+        |-- PU239 (array)
+        |-- ...</pre>
+</div>
+<p>The arrays are all of length N, where each row typically represents a different 
+fuel cycle pass.  The sum of all of the nuclide arrays should sum to one, like 
+Material.comp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Path to HDF5 file that contains the data to read in.</p>
+</div></blockquote>
+<p><strong>groupname</strong> : str</p>
+<blockquote>
+<div><p>Path to HDF5 group that represents the data. 
+In the above example, groupname = &#8220;/Material&#8221;.</p>
+</div></blockquote>
+<p><strong>row</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>The index of the arrays from which to read the data.  This 
+ranges from 0 to N-1.  Defaults to the last element of the array.
+Negative indexing is allowed (row[-N] = row[0]).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.load_from_text">
+<tt class="descname">load_from_text</tt><a class="headerlink" href="#pyne.material.Material.load_from_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Material object may be initialized from a simple text file.
+The text representation of Materials are nuclide identifiers in the 
+first column and mass or weight values in the second column.  For example, 
+for natural uranium:</p>
+<div class="highlight-python"><pre>922340  0.000055
+U235    0.00720
+92238   0.992745</pre>
+</div>
+<p>Data in this file must be whitespace separated.  Any valid nuclide naming
+scheme may be used for any nuctope.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>Path to HDF5 file that contains the data to read in.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.mult_by_mass">
+<tt class="descname">mult_by_mass</tt><a class="headerlink" href="#pyne.material.Material.mult_by_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function multiplies comp by mass and returns the resultant nuctopic vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>nucvec</strong> : dict</p>
+<blockquote class="last">
+<div><p>For a Material mat,</p>
+<div class="math">
+<p><img src="_images/math/d40e44044cd9028d01bfa4e3306a6f2050f5f7ac.png" alt="\mbox{nucvec[nuc]} = \mbox{mat.comp[nuc]}         imes \mbox{mat.mass}" /></p>
+</div></div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.norm_comp">
+<tt class="descname">norm_comp</tt><a class="headerlink" href="#pyne.material.Material.norm_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalizes the composition, preserving the mass of the nuclide vector as mass.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.normalize">
+<tt class="descname">normalize</tt><a class="headerlink" href="#pyne.material.Material.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This convenience function normalizes the mass stream by setting its mass = 1.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_act">
+<tt class="descname">sub_act</tt><a class="headerlink" href="#pyne.material.Material.sub_act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Actinide portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Actinide members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_fp">
+<tt class="descname">sub_fp</tt><a class="headerlink" href="#pyne.material.Material.sub_fp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Fission Product portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Fission Product members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_lan">
+<tt class="descname">sub_lan</tt><a class="headerlink" href="#pyne.material.Material.sub_lan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Lanthanide portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Lanthanide members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_ma">
+<tt class="descname">sub_ma</tt><a class="headerlink" href="#pyne.material.Material.sub_ma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Minor Actinide portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Minor Actinide members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_mat">
+<tt class="descname">sub_mat</tt><a class="headerlink" href="#pyne.material.Material.sub_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grabs a subset of the material and returns a new material comprised of only
+the specified nuclides.  The elements or nuclides included in the new material
+are determined by nuc_sequence.</p>
+<p>The input here is seen as a suggestion and so no error is raised if a nuclide 
+is asked for via nuc_sequence that is not present in the original material.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc_sequence</strong> : sequence</p>
+<blockquote>
+<div><p>Elements and nuctopes to be taken from current stream.
+Members of this list must be integers.  For example, [92, 942390]
+would take all uranium atoms and Pu-239.</p>
+</div></blockquote>
+<p><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only 
+has the members given in nuc_sequence.  The mass of the submaterial
+is calculated based on the weight fraction composition and mass
+of the original mass stream.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_pu">
+<tt class="descname">sub_pu</tt><a class="headerlink" href="#pyne.material.Material.sub_pu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Plutonium portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Plutonium members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_tru">
+<tt class="descname">sub_tru</tt><a class="headerlink" href="#pyne.material.Material.sub_tru" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Transuranic portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Transuranic members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyne.material.Material.sub_u">
+<tt class="descname">sub_u</tt><a class="headerlink" href="#pyne.material.Material.sub_u" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that gets the Uranium portion of a mass stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>The name of the submaterial.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>submaterial</strong> : Material</p>
+<blockquote class="last">
+<div><p>A new mass stream object that only has Uranium members.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyne_icon_small.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nucname.html"
+                        title="previous chapter">Nuclide Naming Module &#8211; <tt class="docutils literal docutils literal"><span class="pre">pyne.nucname</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dev_team.html"
+                        title="next chapter">PyNE Developemnt Team</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/material.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="dev_team.html" title="PyNE Developemnt Team"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nucname.html" title="Nuclide Naming Module – pyne.nucname"
+             >previous</a> |</li>
+        <li><a href="index.html">PyNE v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, The PyNE Development Team.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
