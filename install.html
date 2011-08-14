@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyNE Developemnt Team &mdash; PyNE v0.1 documentation</title>
+    <title>Installation &mdash; PyNE v0.1 documentation</title>
     <link rel="stylesheet" href="_static/altered_nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,7 +22,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="PyNE v0.1 documentation" href="index.html" />
-    <link rel="prev" title="Materials – pyne.material" href="libref/material.html" /> 
+    <link rel="next" title="PyNE User’s Guide" href="usersguide/index.html" />
+    <link rel="prev" title="Welcome to PyNE’s documentation!" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,7 +33,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="libref/material.html" title="Materials – pyne.material"
+          <a href="usersguide/index.html" title="PyNE User’s Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PyNE’s documentation!"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">PyNE v0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -43,17 +47,21 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="pyne-developemnt-team">
-<h1>PyNE Developemnt Team<a class="headerlink" href="#pyne-developemnt-team" title="Permalink to this headline">¶</a></h1>
-<p>The Python for Nuclear Engineering Team includes:</p>
-<ul class="simple">
-<li><a class="reference external" href="http://www.scopatz.com/">Anthony Scopatz</a></li>
-<li><a class="reference external" href="http://reference-man.com/">Seth Johnson</a></li>
-<li><a class="reference external" href="mailto:romano7&#37;&#52;&#48;gmail&#46;com">Paul Romano</a></li>
-<li>Nick Touran</li>
-<li>Katy Huff</li>
-<li>Josh Peterson</li>
-</ul>
+  <div class="section" id="installation">
+<span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Installing PyNE from source is a two-step process:</p>
+<div class="highlight-python"><pre>cd pyne/
+python setup.py install
+nuc_data_make</pre>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">setup.py</span></tt> command compiles and installs the PyNE source code.
+The <tt class="docutils literal"><span class="pre">nuc_data_make</span></tt> builds and installs a database of nuclear data.
+Unfortunately, this must be done as a second step because most nuclear
+data is under some form of license restriction or export control which
+prevents the developers from distributing it with PyNE.  However, the
+<tt class="docutils literal"><span class="pre">nuc_data_make</span></tt> program (which is installed by <tt class="docutils literal"><span class="pre">setup.py</span></tt>) will
+do its best to find relevant nuclear data elsewhere on your machine
+or from public sources on the internet.</p>
 </div>
 
 
@@ -66,11 +74,14 @@
               <img class="logo" src="_static/pyne_icon_small.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="libref/material.html"
-                        title="previous chapter">Materials &#8211; <tt class="docutils literal"><span class="pre">pyne.material</span></tt></a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to PyNE&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usersguide/index.html"
+                        title="next chapter">PyNE User&#8217;s Guide</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/dev_team.txt"
+    <li><a href="_sources/install.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -97,7 +108,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="libref/material.html" title="Materials – pyne.material"
+          <a href="usersguide/index.html" title="PyNE User’s Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PyNE’s documentation!"
              >previous</a> |</li>
         <li><a href="index.html">PyNE v0.1 documentation</a> &raquo;</li> 
       </ul>
