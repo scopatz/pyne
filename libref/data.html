@@ -59,7 +59,7 @@ are taken from the <tt class="file docutils literal"><span class="pre">nuc_data.
 </pre></div>
 </div>
 <div class="section" id="atomic-weight">
-<h2>Atomic weight<a class="headerlink" href="#atomic-weight" title="Permalink to this headline">¶</a></h2>
+<h2>Atomic Weight<a class="headerlink" href="#atomic-weight" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pyne.data.nuc_weight">
 <tt class="descclassname">pyne.data.</tt><tt class="descname">nuc_weight</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.nuc_weight" title="Permalink to this definition">¶</a></dt>
@@ -94,6 +94,190 @@ This is used by <a class="reference internal" href="#pyne.data.nuc_weight" title
 </dd></dl>
 
 </div>
+<div class="section" id="decay-data">
+<h2>Decay Data<a class="headerlink" href="#decay-data" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyne.data.half_life">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">half_life</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.half_life" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the half-life of a nuclide in [seconds].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>hl</strong> : float</p>
+<blockquote class="last">
+<div><p>Half-life of this nuclide [seconds].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If the nuclide is not found, the nuclide is assumed to be stable.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyne.data.half_life_map">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">half_life_map</tt><a class="headerlink" href="#pyne.data.half_life_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapping from zzaaam-nuclides to their half lives.
+This is used by <a class="reference internal" href="#pyne.data.half_life" title="pyne.data.half_life"><tt class="xref py py-func docutils literal"><span class="pre">half_life()</span></tt></a> under the hood.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyne.data.decay_const">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">decay_const</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.decay_const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the decay constant of a nuclide in [1/seconds].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>dc</strong> : float</p>
+<blockquote class="last">
+<div><p>Decay constant of this nuclide [1/seconds].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If the nuclide is not found, the nuclide is assumed to be stable.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyne.data.decay_const_map">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">decay_const_map</tt><a class="headerlink" href="#pyne.data.decay_const_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapping from zzaaam-nuclides to their decay constants.
+This is used by <a class="reference internal" href="#pyne.data.decay_const" title="pyne.data.decay_const"><tt class="xref py py-func docutils literal"><span class="pre">decay_const()</span></tt></a> under the hood.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="neutron-scattering-lengths">
+<h2>Neutron Scattering Lengths<a class="headerlink" href="#neutron-scattering-lengths" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyne.data.b">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the bound scattering length of a nuclide in [cm].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>bc</strong> : float</p>
+<blockquote class="last">
+<div><p>Coherent bound scattering length of nuc [cm].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If nuc is not found, the value for a nuclide with the same A-number 
+is used instead. If still no value is found, the an isotope of the 
+same element as nuc is used.  If still no values are found, zero is
+returned.</p>
+<p>This value is computed from the coherent and incoherent scattering 
+lengths as follows:</p>
+<div class="math">
+<p><img src="../_images/math/17b3f128996d9876b58a388ea25b71b48931e7f7.png" alt="b = \sqrt{\left| b_{\mbox{coh}} \right|^2 + \left| b_{\mbox{inc}} \right|^2}" /></p>
+</div></dd></dl>
+
+<dl class="data">
+<dt id="pyne.data.b_map">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b_map</tt><a class="headerlink" href="#pyne.data.b_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapping from zzaaam-nuclides to their bound neuton scattering lengths.
+This is used by <a class="reference internal" href="#pyne.data.b" title="pyne.data.b"><tt class="xref py py-func docutils literal"><span class="pre">b()</span></tt></a> under the hood.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyne.data.b_coherent">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b_coherent</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.b_coherent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the coherent bound scattering length of a nuclide in [cm].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>bc</strong> : complex</p>
+<blockquote class="last">
+<div><p>Coherent bound scattering length of nuc [cm].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If nuc is not found, the value for a nuclide with the same A-number 
+is used instead. If still no value is found, the an isotope of the 
+same element as nuc is used.  If still no values are found, zero is
+returned.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyne.data.b_coherent_map">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b_coherent_map</tt><a class="headerlink" href="#pyne.data.b_coherent_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapping from zzaaam-nuclides to their bound coherent neuton scattering lengths.
+This is used by <a class="reference internal" href="#pyne.data.b_coherent" title="pyne.data.b_coherent"><tt class="xref py py-func docutils literal"><span class="pre">b_coherent()</span></tt></a> under the hood.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyne.data.b_incoherent">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b_incoherent</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.data.b_incoherent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the incoherent bound scattering length of a nuclide in [cm].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>bi</strong> : complex</p>
+<blockquote class="last">
+<div><p>Incoherent bound scattering length of nuc [cm].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If nuc is not found, the value for a nuclide with the same A-number 
+is used instead. If still no value is found, the an isotope of the 
+same element as nuc is used.  If still no values are found, zero is
+returned.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyne.data.b_incoherent_map">
+<tt class="descclassname">pyne.data.</tt><tt class="descname">b_incoherent_map</tt><a class="headerlink" href="#pyne.data.b_incoherent_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapping from zzaaam-nuclides to their bound incoherent neuton scattering lengths.
+This is used by <a class="reference internal" href="#pyne.data.b_coherent" title="pyne.data.b_coherent"><tt class="xref py py-func docutils literal"><span class="pre">b_coherent()</span></tt></a> under the hood.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -108,7 +292,9 @@ This is used by <a class="reference internal" href="#pyne.data.nuc_weight" title
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Basic Nuclear Data &#8211; <tt class="docutils literal"><span class="pre">pyne.data</span></tt></a><ul>
-<li><a class="reference internal" href="#atomic-weight">Atomic weight</a></li>
+<li><a class="reference internal" href="#atomic-weight">Atomic Weight</a></li>
+<li><a class="reference internal" href="#decay-data">Decay Data</a></li>
+<li><a class="reference internal" href="#neutron-scattering-lengths">Neutron Scattering Lengths</a></li>
 </ul>
 </li>
 </ul>
