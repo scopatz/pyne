@@ -24,7 +24,7 @@
     <link rel="top" title="PyNE v0.1 documentation" href="../index.html" />
     <link rel="up" title="PyNE User’s Guide" href="index.html" />
     <link rel="next" title="Library Reference" href="../libref/index.html" />
-    <link rel="prev" title="CCCC Formats" href="cccc.html" /> 
+    <link rel="prev" title="ACE Cross Sections" href="ace.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,10 +34,16 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../libref/index.html" title="Library Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="cccc.html" title="CCCC Formats"
+          <a href="ace.html" title="ACE Cross Sections"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">PyNE v0.1 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">PyNE User&#8217;s Guide</a> &raquo;</li> 
@@ -121,7 +127,7 @@ file must be supplied by the user.  Additionally, the execution path for ORIGEN
     <span class="c"># Run and parse origen output</span>
     <span class="n">rtn</span> <span class="o">=</span> <span class="n">check_call</span><span class="p">([</span><span class="s">&#39;o2_therm_linux.exe&#39;</span><span class="p">])</span>
     <span class="n">tape6</span> <span class="o">=</span> <span class="n">origen22</span><span class="o">.</span><span class="n">parse_tape6</span><span class="p">(</span><span class="s">&#39;TAPE6.OUT&#39;</span><span class="p">)</span>
-    <span class="n">h2_concentration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tape6</span><span class="p">[</span><span class="s">&#39;table_5&#39;</span><span class="p">][</span><span class="s">&#39;summary&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">][</span><span class="mi">10020</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">h2_concentration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tape6</span><span class="p">[</span><span class="s">&#39;table_5&#39;</span><span class="p">][</span><span class="s">&#39;summary&#39;</span><span class="p">][</span><span class="s">&#39;activation_products&#39;</span><span class="p">][</span><span class="s">&#39;H2&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="k">print</span>
 <span class="k">print</span> <span class="s">&quot;H2 Concentration: &quot;</span><span class="p">,</span> <span class="n">h2_concentration</span>
@@ -149,8 +155,8 @@ file must be supplied by the user.  Additionally, the execution path for ORIGEN
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="cccc.html"
-                        title="previous chapter">CCCC Formats</a></p>
+  <p class="topless"><a href="ace.html"
+                        title="previous chapter">ACE Cross Sections</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../libref/index.html"
                         title="next chapter">Library Reference</a></p>
@@ -183,10 +189,16 @@ file must be supplied by the user.  Additionally, the execution path for ORIGEN
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../libref/index.html" title="Library Reference"
              >next</a> |</li>
         <li class="right" >
-          <a href="cccc.html" title="CCCC Formats"
+          <a href="ace.html" title="ACE Cross Sections"
              >previous</a> |</li>
         <li><a href="../index.html">PyNE v0.1 documentation</a> &raquo;</li>
           <li><a href="index.html" >PyNE User&#8217;s Guide</a> &raquo;</li> 

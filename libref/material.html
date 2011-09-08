@@ -34,6 +34,12 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="cccc.html" title="CCCC Formats – pyne.cccc"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -54,7 +60,7 @@
 <p>This module contains the Material class, which is used to represent nuclear
 materials throughout PyNE.</p>
 <p>All functionality may be found in the <tt class="docutils literal"><span class="pre">material</span></tt> package:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyne.material</span> <span class="kn">import</span> <span class="n">Material</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pyne</span> <span class="kn">import</span> <span class="n">material</span>
 </pre></div>
 </div>
 <p>Materials are the primary container for radionuclides. They map nuclides to <strong>mass weights</strong>,
@@ -228,7 +234,7 @@ Initialization is therefore a two-step process:</p>
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
 <blockquote class="last">
-<div><p>Path to HDF5 file that contains the data to read in.</p>
+<div><p>Path to text file that contains the data to read in.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -692,6 +698,177 @@ mass weight value.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="material-generation-functions">
+<h2>Material Generation Functions<a class="headerlink" href="#material-generation-functions" title="Permalink to this headline">¶</a></h2>
+<p>The following top-level module functions are used to generate materials from various sources.</p>
+<dl class="function">
+<dt id="pyne.material.from_atom_frac">
+<tt class="descclassname">pyne.material.</tt><tt class="descname">from_atom_frac</tt><big>(</big><em>atom_fracs</em>, <em>mass=-1.0</em>, <em>name=''</em>, <em>atoms_per_mol=-1.0</em><big>)</big><a class="headerlink" href="#pyne.material.from_atom_frac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Material from a mapping of atom fractions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>atom_fracs</strong> : dict</p>
+<blockquote>
+<div><p>Dictionary that maps nuclides or materials to atom fractions for the 
+material.  The keys may be intergers, strings, or materials. The values
+must be castable to floats.</p>
+</div></blockquote>
+<p><strong>mass</strong> : float, optional</p>
+<blockquote>
+<div><p>This is the mass of the new stream. If the mass provided
+is negative (default -1.0) then the mass of the new stream is calculated from 
+the sum of compdict&#8217;s components before normalization.  If the mass here
+is positive or zero, then this mass overrides the calculated one.</p>
+</div></blockquote>
+<p><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>A string label for the material.  Helpful for large numbers of 
+streams. Default &#8216;&#8217;.</p>
+</div></blockquote>
+<p><strong>atoms_per_mol</strong> : float, optional</p>
+<blockquote>
+<div><p>Number of atoms to per molecule of material.  Needed to obtain proper scaling
+of molecular weights.  For example, this value for water is 3.0.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>mat</strong> : Material</p>
+<blockquote class="last">
+<div><p>A material generated from atom fractions.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#pyne.material.Material.from_atom_frac" title="pyne.material.Material.from_atom_frac"><tt class="xref py py-obj docutils literal"><span class="pre">Material.from_atom_frac</span></tt></a></dt>
+<dd>Underlying method class method.</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>To get a material from water, based on atom fractions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">h2o</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10010</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s">&#39;O16&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">from_atom_frac</span><span class="p">(</span><span class="n">h2o</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;water&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or for Uranium-Oxide, based on an initial fuel vector:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Define initial heavy metal</span>
+<span class="n">ihm</span> <span class="o">=</span> <span class="n">from_atom_frac</span><span class="p">({</span><span class="s">&#39;U235&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s">&#39;U238&#39;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">},</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;IHM&#39;</span><span class="p">)</span>
+
+<span class="c"># Define Uranium-Oxide</span>
+<span class="n">uox</span> <span class="o">=</span> <span class="p">{</span><span class="n">ihm</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">80160</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">from_atom_frac</span><span class="p">(</span><span class="n">uox</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;UOX&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the initial heavy metal was used as a key in a dictionary.
+This is possible because Materials are hashable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyne.material.load_from_hdf5">
+<tt class="descclassname">pyne.material.</tt><tt class="descname">load_from_hdf5</tt><big>(</big><em>filename</em>, <em>groupname</em>, <em>row=-1</em><big>)</big><a class="headerlink" href="#pyne.material.load_from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Material object from an HDF5 file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Path to HDF5 file that contains the data to read in.</p>
+</div></blockquote>
+<p><strong>groupname</strong> : str</p>
+<blockquote>
+<div><p>Path to HDF5 group that represents the data. 
+In the above example, groupname = &#8220;/Material&#8221;.</p>
+</div></blockquote>
+<p><strong>row</strong> : int, optional</p>
+<blockquote>
+<div><p>The index of the arrays from which to read the data.  This 
+ranges from 0 to N-1.  Defaults to the last element of the array.
+Negative indexing is allowed (row[-N] = row[0]).</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>mat</strong> : Material</p>
+<blockquote class="last">
+<div><p>A material found in the HDF5 file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#pyne.material.Material.load_from_hdf5" title="pyne.material.Material.load_from_hdf5"><tt class="xref py py-obj docutils literal"><span class="pre">Material.load_from_hdf5</span></tt></a></dt>
+<dd>Underlying method class method.</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>This method loads data into a new material:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">load_from_hdf5</span><span class="p">(</span><span class="s">&quot;afile.h5&quot;</span><span class="p">,</span> <span class="s">&quot;/foo/bar/mat&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyne.material.load_from_text">
+<tt class="descclassname">pyne.material.</tt><tt class="descname">load_from_text</tt><big>(</big><em>filename</em>, <em>mass=-1.0</em>, <em>name=''</em>, <em>atoms_per_mol=-1.0</em><big>)</big><a class="headerlink" href="#pyne.material.load_from_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Material object from a simple text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Path to text file that contains the data to read in.</p>
+</div></blockquote>
+<p><strong>mass</strong> : float, optional</p>
+<blockquote>
+<div><p>This is the mass of the new stream. If the mass provided
+is negative (default -1.0) then the mass of the new stream is calculated from 
+the sum of compdict&#8217;s components before normalization.  If the mass here
+is positive or zero, then this mass overrides the calculated one.</p>
+</div></blockquote>
+<p><strong>name</strong> : str, optional</p>
+<blockquote>
+<div><p>A string label for the material.  Helpful for large numbers of 
+streams. Default &#8216;&#8217;.</p>
+</div></blockquote>
+<p><strong>atoms_per_mol</strong> : float, optional</p>
+<blockquote>
+<div><p>Number of atoms to per molecule of material.  Needed to obtain proper scaling
+of molecular weights.  For example, this value for water is 3.0.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>mat</strong> : Material</p>
+<blockquote class="last">
+<div><p>A material found in the HDF5 file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#pyne.material.Material.load_from_text" title="pyne.material.Material.load_from_text"><tt class="xref py py-obj docutils literal"><span class="pre">Material.load_from_text</span></tt></a></dt>
+<dd>Underlying method class method.</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>This method loads data into a new Material:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">load_from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -707,6 +884,7 @@ mass weight value.</p>
   <ul>
 <li><a class="reference internal" href="#">Materials &#8211; <tt class="docutils literal"><span class="pre">pyne.material</span></tt></a><ul>
 <li><a class="reference internal" href="#material-class">Material Class</a></li>
+<li><a class="reference internal" href="#material-generation-functions">Material Generation Functions</a></li>
 </ul>
 </li>
 </ul>
@@ -716,7 +894,7 @@ mass weight value.</p>
                         title="previous chapter">Basic Nuclear Data &#8211; <tt class="docutils literal docutils literal"><span class="pre">pyne.data</span></tt></a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="cccc.html"
-                        title="next chapter">CCCC Formats &#8211; <tt class="docutils literal docutils literal"><span class="pre">pyne.cccc</span></tt></a></p>
+                        title="next chapter">CCCC Formats &#8211; <tt class="docutils literal docutils literal docutils literal"><span class="pre">pyne.cccc</span></tt></a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/libref/material.txt"
@@ -745,6 +923,12 @@ mass weight value.</p>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../np-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="cccc.html" title="CCCC Formats – pyne.cccc"
              >next</a> |</li>
