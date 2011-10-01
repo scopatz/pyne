@@ -173,8 +173,8 @@ For example, this value for water is 3.0.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyne.material.Material.load_from_hdf5">
-<tt class="descname">load_from_hdf5</tt><big>(</big><em>filename</em>, <em>groupname</em>, <em>row=-1</em><big>)</big><a class="headerlink" href="#pyne.material.Material.load_from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dt id="pyne.material.Material.from_hdf5">
+<tt class="descname">from_hdf5</tt><big>(</big><em>filename</em>, <em>datapath</em>, <em>row=-1</em>, <em>protocol=1</em><big>)</big><a class="headerlink" href="#pyne.material.Material.from_hdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a Material object from an HDF5 file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -184,27 +184,37 @@ For example, this value for water is 3.0.</p>
 <blockquote>
 <div><p>Path to HDF5 file that contains the data to read in.</p>
 </div></blockquote>
-<p><strong>groupname</strong> : str</p>
+<p><strong>datapath</strong> : str</p>
 <blockquote>
-<div><p>Path to HDF5 group that represents the data. 
-In the above example, groupname = &#8220;/Material&#8221;.</p>
+<div><p>Path to HDF5 table or group that represents the data. 
+In the example below, datapath = &#8220;/material&#8221;.</p>
 </div></blockquote>
 <p><strong>row</strong> : int, optional</p>
-<blockquote class="last">
+<blockquote>
 <div><p>The index of the arrays from which to read the data.  This 
 ranges from 0 to N-1.  Defaults to the last element of the array.
 Negative indexing is allowed (row[-N] = row[0]).</p>
+</div></blockquote>
+<p><strong>protocol</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>Specifies the protocol to use to read in the data.  Different 
+protocols are used to represent different internal structures in 
+the HDF5 file.</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The HDF5 representation of a Material is a group that holds several 
+<p>There are currently two protocols which are implemented for how to store
+materials inside of an HDF5 file.  Protocol 0 is the older, deprecated method
+using a group of arrays.  Protocol 1 is the newer, prefered method which 
+uses a table of materials plus a side array of nuclides.</p>
+<p>The Protocol 0 HDF5 representation of a Material is a group that holds several 
 extendable array datasets.  One array is entitled &#8220;Mass&#8221; while the other datasets
 are nuclide names in name form (&#8220;U235&#8221;, &#8220;NP237&#8221;, <em>etc</em>).  For example:</p>
-<div class="highlight-python"><pre>File.h5 (file)
-    |-- Material (group)
+<div class="highlight-python"><pre>file.h5 (file)
+    |-- material (group)
         |-- Mass (array)
         |-- H1 (array)
         |-- O16 (array)
@@ -214,19 +224,34 @@ are nuclide names in name form (&#8220;U235&#8221;, &#8220;NP237&#8221;, <em>etc
 </div>
 <p>The arrays are all of length N, where each row typically represents a different 
 fuel cycle pass.  The sum of all of the nuclide arrays should sum to one, like 
-Material.comp.</p>
+Material.comp. This method is deprecated.</p>
+<p>Protocol 1 is the newer, more efficient protocol for storing many materials. 
+It consists of a table which stores the material information and an array
+that stores the nuclides (zzaaam) which index the comp array:</p>
+<div class="highlight-python"><pre>file.h5 (file)
+    |-- material (table)
+        |-- name (string col, len 20)
+        |-- mass (double col)
+        |-- atoms_per_mol (double col)
+        |-- comp (double array col, len of nuc_zz)
+    |-- nuc_zz (int array)</pre>
+</div>
+<p>The material table has a string attribute called &#8216;nucpath&#8217; which holds the 
+path to the nuclide array inside this HDF5 file.  The same nucpath may be
+used for multiple material tables.  The length of the nucpath must match 
+the length of the comp arrays.</p>
 <p class="rubric">Examples</p>
 <p>This method loads data into a pre-existing <a class="reference internal" href="#pyne.material.Material" title="pyne.material.Material"><tt class="xref py py-class docutils literal"><span class="pre">Material</span></tt></a>.  
 Initialization is therefore a two-step process:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">Material</span><span class="p">()</span>
-<span class="n">mat</span><span class="o">.</span><span class="n">load_from_hdf5</span><span class="p">(</span><span class="s">&quot;afile.h5&quot;</span><span class="p">,</span> <span class="s">&quot;/foo/bar/mat&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mat</span><span class="o">.</span><span class="n">from_hdf5</span><span class="p">(</span><span class="s">&quot;afile.h5&quot;</span><span class="p">,</span> <span class="s">&quot;/foo/bar/mat&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyne.material.Material.load_from_text">
-<tt class="descname">load_from_text</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#pyne.material.Material.load_from_text" title="Permalink to this definition">¶</a></dt>
+<dt id="pyne.material.Material.from_text">
+<tt class="descname">from_text</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#pyne.material.Material.from_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a Material object from a simple text file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -254,7 +279,7 @@ scheme may be used for any nuctope.</p>
 <p>This method loads data into a pre-existing Material.  
 Initialization is therefore a two-step process:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">Material</span><span class="p">()</span>
-<span class="n">mat</span><span class="o">.</span><span class="n">load_from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
+<span class="n">mat</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is most often called implicitly by the Material constructor.</p>
@@ -769,8 +794,8 @@ This is possible because Materials are hashable.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="pyne.material.load_from_hdf5">
-<tt class="descclassname">pyne.material.</tt><tt class="descname">load_from_hdf5</tt><big>(</big><em>filename</em>, <em>groupname</em>, <em>row=-1</em><big>)</big><a class="headerlink" href="#pyne.material.load_from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dt id="pyne.material.from_hdf5">
+<tt class="descclassname">pyne.material.</tt><tt class="descname">from_hdf5</tt><big>(</big><em>filename</em>, <em>datapath</em>, <em>row=-1</em>, <em>protocol=1</em><big>)</big><a class="headerlink" href="#pyne.material.from_hdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Material object from an HDF5 file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -780,16 +805,21 @@ This is possible because Materials are hashable.</p>
 <blockquote>
 <div><p>Path to HDF5 file that contains the data to read in.</p>
 </div></blockquote>
-<p><strong>groupname</strong> : str</p>
+<p><strong>datapath</strong> : str</p>
 <blockquote>
-<div><p>Path to HDF5 group that represents the data. 
-In the above example, groupname = &#8220;/Material&#8221;.</p>
+<div><p>Path to HDF5 table or group that represents the data.</p>
 </div></blockquote>
 <p><strong>row</strong> : int, optional</p>
 <blockquote>
 <div><p>The index of the arrays from which to read the data.  This 
 ranges from 0 to N-1.  Defaults to the last element of the array.
 Negative indexing is allowed (row[-N] = row[0]).</p>
+</div></blockquote>
+<p><strong>protocol</strong> : int, optional</p>
+<blockquote>
+<div><p>Specifies the protocol to use to read in the data.  Different 
+protocols are used to represent different internal structures in 
+the HDF5 file.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -804,20 +834,20 @@ Negative indexing is allowed (row[-N] = row[0]).</p>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
 <dl class="last docutils">
-<dt><a class="reference internal" href="#pyne.material.Material.load_from_hdf5" title="pyne.material.Material.load_from_hdf5"><tt class="xref py py-obj docutils literal"><span class="pre">Material.load_from_hdf5</span></tt></a></dt>
+<dt><a class="reference internal" href="#pyne.material.Material.from_hdf5" title="pyne.material.Material.from_hdf5"><tt class="xref py py-obj docutils literal"><span class="pre">Material.from_hdf5</span></tt></a></dt>
 <dd>Underlying method class method.</dd>
 </dl>
 </div>
 <p class="rubric">Examples</p>
 <p>This method loads data into a new material:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">load_from_hdf5</span><span class="p">(</span><span class="s">&quot;afile.h5&quot;</span><span class="p">,</span> <span class="s">&quot;/foo/bar/mat&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">from_hdf5</span><span class="p">(</span><span class="s">&quot;afile.h5&quot;</span><span class="p">,</span> <span class="s">&quot;/foo/bar/mat&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="pyne.material.load_from_text">
-<tt class="descclassname">pyne.material.</tt><tt class="descname">load_from_text</tt><big>(</big><em>filename</em>, <em>mass=-1.0</em>, <em>name=''</em>, <em>atoms_per_mol=-1.0</em><big>)</big><a class="headerlink" href="#pyne.material.load_from_text" title="Permalink to this definition">¶</a></dt>
+<dt id="pyne.material.from_text">
+<tt class="descclassname">pyne.material.</tt><tt class="descname">from_text</tt><big>(</big><em>filename</em>, <em>mass=-1.0</em>, <em>name=''</em>, <em>atoms_per_mol=-1.0</em><big>)</big><a class="headerlink" href="#pyne.material.from_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Material object from a simple text file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -857,13 +887,13 @@ of molecular weights.  For example, this value for water is 3.0.</p>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
 <dl class="last docutils">
-<dt><a class="reference internal" href="#pyne.material.Material.load_from_text" title="pyne.material.Material.load_from_text"><tt class="xref py py-obj docutils literal"><span class="pre">Material.load_from_text</span></tt></a></dt>
+<dt><a class="reference internal" href="#pyne.material.Material.from_text" title="pyne.material.Material.from_text"><tt class="xref py py-obj docutils literal"><span class="pre">Material.from_text</span></tt></a></dt>
 <dd>Underlying method class method.</dd>
 </dl>
 </div>
 <p class="rubric">Examples</p>
 <p>This method loads data into a new Material:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">load_from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

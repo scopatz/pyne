@@ -105,8 +105,8 @@ dictionaries of compositions are shown below.</p>
 <span class="go">CM244  0.111111111111</span>
 </pre></div>
 </div>
-<p>Materials may also be initialized from plain text or HDF5 files (see <a class="reference internal" href="../libref/material.html#pyne.material.Material.load_from_text" title="pyne.material.Material.load_from_text"><tt class="xref py py-meth docutils literal"><span class="pre">Material.load_from_text()</span></tt></a> and
-<a class="reference internal" href="../libref/material.html#pyne.material.Material.load_from_hdf5" title="pyne.material.Material.load_from_hdf5"><tt class="xref py py-meth docutils literal"><span class="pre">Material.load_from_hdf5()</span></tt></a>).  Once you have a Material instance, you can always obtain the unnormalized
+<p>Materials may also be initialized from plain text or HDF5 files (see <a class="reference internal" href="../libref/material.html#pyne.material.Material.from_text" title="pyne.material.Material.from_text"><tt class="xref py py-meth docutils literal"><span class="pre">Material.from_text()</span></tt></a> and
+<a class="reference internal" href="../libref/material.html#pyne.material.Material.from_hdf5" title="pyne.material.Material.from_hdf5"><tt class="xref py py-meth docutils literal"><span class="pre">Material.from_hdf5()</span></tt></a>).  Once you have a Material instance, you can always obtain the unnormalized
 mass vector through <a class="reference internal" href="../libref/material.html#pyne.material.Material.mult_by_mass" title="pyne.material.Material.mult_by_mass"><tt class="xref py py-meth docutils literal"><span class="pre">Material.mult_by_mass()</span></tt></a>.  Normalization routines to normalize the mass
 <a class="reference internal" href="../libref/material.html#pyne.material.Material.normalize" title="pyne.material.Material.normalize"><tt class="xref py py-meth docutils literal"><span class="pre">Material.normalize()</span></tt></a> or the composition <a class="reference internal" href="../libref/material.html#pyne.material.Material.norm_comp" title="pyne.material.Material.norm_comp"><tt class="xref py py-meth docutils literal"><span class="pre">Material.norm_comp()</span></tt></a> are also available.</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [7]: </span><span class="n">leu</span><span class="o">.</span><span class="n">mult_by_mass</span><span class="p">()</span>
@@ -230,7 +230,7 @@ Plutonium vector.</p>
 <div class="section" id="molecular-weights-atom-fractions">
 <h2>Molecular Weights &amp; Atom Fractions<a class="headerlink" href="#molecular-weights-atom-fractions" title="Permalink to this headline">¶</a></h2>
 <p>You may also calculate the molecular weight of a material via the <a class="reference internal" href="../libref/material.html#pyne.material.Material.molecular_weight" title="pyne.material.Material.molecular_weight"><tt class="xref py py-meth docutils literal"><span class="pre">Material.molecular_weight()</span></tt></a> method.
-This uses the <tt class="xref py py-func docutils literal"><span class="pre">pyne.nucname.nuc_weight()</span></tt> function to look up the atomic weight values of
+This uses the <a class="reference internal" href="../libref/data.html#pyne.data.nuc_weight" title="pyne.data.nuc_weight"><tt class="xref py py-func docutils literal"><span class="pre">pyne.data.nuc_weight()</span></tt></a> function to look up the atomic weight values of
 the constituent nuclides.</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [29]: </span><span class="n">leu</span><span class="o">.</span><span class="n">molecular_weight</span><span class="p">()</span>
 <span class="gr">Out[29]: </span><span class="mf">237.9290388038301</span>
