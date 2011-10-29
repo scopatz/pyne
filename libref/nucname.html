@@ -79,6 +79,9 @@ flag is lowercase.  For instance, &#8216;Am-242m&#8217; is the valid serpent not
 <li><strong>NIST</strong>: The NIST naming convention is also similar to the Serpent form.  However, this
 convention contains not meta-stable information.  Moreover, the A-number comes before the
 element symbol.  For example, &#8216;242Am&#8217; is the valid NIST notation.</li>
+<li><strong>CINDER</strong>: The CINDER format is similar to zzaaam form except that the placement of the Z- and
+A-numbers are swapped. Therefore, this format is effectively aaazzzm.  For example, &#8216;2420951&#8217; is
+the valid cinder notation for &#8216;AM242M&#8217;.</li>
 </ol>
 </div></blockquote>
 <p>All functionality may be found in the <tt class="docutils literal"><span class="pre">nucname</span></tt> package:</p>
@@ -113,6 +116,7 @@ well as other helpful module attributes.</p>
 </table>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.nucname.name">
 <tt class="descclassname">pyne.nucname.</tt><tt class="descname">name</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.nucname.name" title="Permalink to this definition">¶</a></dt>
@@ -137,6 +141,7 @@ well as other helpful module attributes.</p>
 </table>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.nucname.mcnp">
 <tt class="descclassname">pyne.nucname.</tt><tt class="descname">mcnp</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.nucname.mcnp" title="Permalink to this definition">¶</a></dt>
@@ -161,6 +166,7 @@ well as other helpful module attributes.</p>
 </table>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.nucname.serpent">
 <tt class="descclassname">pyne.nucname.</tt><tt class="descname">serpent</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.nucname.serpent" title="Permalink to this definition">¶</a></dt>
@@ -185,6 +191,7 @@ well as other helpful module attributes.</p>
 </table>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.nucname.nist">
 <tt class="descclassname">pyne.nucname.</tt><tt class="descname">nist</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.nucname.nist" title="Permalink to this definition">¶</a></dt>
@@ -202,6 +209,31 @@ well as other helpful module attributes.</p>
 <tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>newnuc</strong> : str</p>
 <blockquote class="last">
 <div><p>Output nuclide in nist form.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="function">
+<dt id="pyne.nucname.cinder">
+<tt class="descclassname">pyne.nucname.</tt><tt class="descname">cinder</tt><big>(</big><em>nuc</em><big>)</big><a class="headerlink" href="#pyne.nucname.cinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a nuclide to its CINDER (aaazzzm) form (2420951).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>nuc</strong> : int or str</p>
+<blockquote>
+<div><p>Input nuclide.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>newnuc</strong> : int</p>
+<blockquote class="last">
+<div><p>Output nuclide in CINDER (aaazzzm) form.</p>
 </div></blockquote>
 </td>
 </tr>

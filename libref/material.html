@@ -107,9 +107,14 @@ is positive or zero, then this mass overrides the calculated one.</p>
 streams. Default &#8216;&#8217;.</p>
 </div></blockquote>
 <p><strong>atoms_per_mol</strong> : float, optional</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Number of atoms to per molecule of material.  Needed to obtain proper scaling
 of molecular weights.  For example, this value for water is 3.0.</p>
+</div></blockquote>
+<p><strong>free_mat</strong> : bool, optional</p>
+<blockquote class="last">
+<div><p>Flag for whether this wrapper &#8216;owns&#8217; this underlying C++ pyne::Material object,
+and thus determines whether or not to deallocate it on wrapper destruction.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -250,6 +255,61 @@ Initialization is therefore a two-step process:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pyne.material.Material.write_hdf5">
+<tt class="descname">write_hdf5</tt><big>(</big><em>filename</em>, <em>datapath=&quot;/material&quot;</em>, <em>nucpath=&quot;/nuc_zz&quot;</em>, <em>row=-0.0</em>, <em>chunksize=100</em><big>)</big><a class="headerlink" href="#pyne.material.Material.write_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the material to an HDF5 file, using Protocol 1 (see the from_hdf5() method).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>Path to HDF5 file to write the data out to.  If the file does not exist,
+it will be created.</p>
+</div></blockquote>
+<p><strong>datapath</strong> : str, optional</p>
+<blockquote>
+<div><p>Path to HDF5 table that represents the data.  If the table does not
+exist, it will be created.</p>
+</div></blockquote>
+<p><strong>nucpath</strong> : str, optional</p>
+<blockquote>
+<div><p>Path to zzaaam array of nuclides to write out.  If this array does not
+exist, it is created with the nuclides present in this material. Nuclides
+present in this material but not in nucpath will not be written out.</p>
+</div></blockquote>
+<p><strong>row</strong> : float, optional</p>
+<blockquote>
+<div><p>The row index of the HDF5 table to write this material to.  This 
+ranges from 0 to N.  Negative indexing is allowed (row[-N] = row[0]).
+Defaults to the appending this material to the table (row[N] = row[-0.0]).
+This value must be a float since in integer repesentation 0 <strong>is</strong> -0, but
+in float representation 0.0 <strong>is not</strong> -0.0.</p>
+</div></blockquote>
+<p><strong>chunksize</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>In Protocol 1, materials are stored in an HDF5 table which is an extensible
+data type. The chunksize determines the number of rows per chunk.  For better
+performance, this number should be as close as possible to the final table 
+size.  This parameter is only relevant if a new table is being created.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>The following writes out ten low-enriched uranium materials to a new table:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">leu</span> <span class="o">=</span> <span class="n">Material</span><span class="p">({</span><span class="s">&#39;U235&#39;</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">,</span> <span class="s">&#39;U238&#39;</span><span class="p">:</span> <span class="mf">0.96</span><span class="p">},</span> <span class="mf">4.2</span><span class="p">,</span> <span class="s">&quot;LEU&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">leu</span><span class="o">.</span><span class="n">write_hdf5</span><span class="p">(</span><span class="s">&#39;proto1.h5&#39;</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">leu</span> <span class="o">=</span> <span class="n">Material</span><span class="p">({</span><span class="s">&#39;U235&#39;</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">,</span> <span class="s">&#39;U238&#39;</span><span class="p">:</span> <span class="mf">0.96</span><span class="p">},</span> <span class="n">i</span><span class="o">*</span><span class="mf">4.2</span><span class="p">,</span> <span class="s">&quot;LEU&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">leu</span><span class="o">.</span><span class="n">write_hdf5</span><span class="p">(</span><span class="s">&#39;proto1.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyne.material.Material.from_text">
 <tt class="descname">from_text</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#pyne.material.Material.from_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a Material object from a simple text file.</p>
@@ -274,15 +334,48 @@ U235    0.00720
 92238   0.992745</pre>
 </div>
 <p>Data in this file must be whitespace separated.  Any valid nuclide naming
-scheme may be used for any nuctope.</p>
+scheme may be used for the nuclide identifiers.  Moreover, material metadata 
+may be optionally supplied:</p>
+<div class="highlight-python"><pre>Name    NatU
+Mass    42.0
+APerM   1
+922340  0.000055
+U235    0.00720
+92238   0.992745</pre>
+</div>
 <p class="rubric">Examples</p>
 <p>This method loads data into a pre-existing Material.  
 Initialization is therefore a two-step process:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">Material</span><span class="p">()</span>
-<span class="n">mat</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
+<span class="n">mat</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.txt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is most often called implicitly by the Material constructor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyne.material.Material.write_text">
+<tt class="descname">write_text</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#pyne.material.Material.write_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the material to a plain text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote class="last">
+<div><p>Path to text file to write the data to.  If the file already exists, it 
+will be overwritten.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>The following writes out a low-enriched uranium material to a new file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">leu</span> <span class="o">=</span> <span class="n">Material</span><span class="p">({</span><span class="s">&#39;U235&#39;</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">,</span> <span class="s">&#39;U238&#39;</span><span class="p">:</span> <span class="mf">0.96</span><span class="p">},</span> <span class="mf">42.0</span><span class="p">,</span> <span class="s">&quot;LEU&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">leu</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s">&#39;leu.txt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -793,6 +886,7 @@ of molecular weights.  For example, this value for water is 3.0.</p>
 This is possible because Materials are hashable.</p>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.material.from_hdf5">
 <tt class="descclassname">pyne.material.</tt><tt class="descname">from_hdf5</tt><big>(</big><em>filename</em>, <em>datapath</em>, <em>row=-1</em>, <em>protocol=1</em><big>)</big><a class="headerlink" href="#pyne.material.from_hdf5" title="Permalink to this definition">¶</a></dt>
@@ -845,6 +939,7 @@ the HDF5 file.</p>
 </div>
 </dd></dl>
 
+<hr class="docutils" />
 <dl class="function">
 <dt id="pyne.material.from_text">
 <tt class="descclassname">pyne.material.</tt><tt class="descname">from_text</tt><big>(</big><em>filename</em>, <em>mass=-1.0</em>, <em>name=''</em>, <em>atoms_per_mol=-1.0</em><big>)</big><a class="headerlink" href="#pyne.material.from_text" title="Permalink to this definition">¶</a></dt>
@@ -893,7 +988,7 @@ of molecular weights.  For example, this value for water is 3.0.</p>
 </div>
 <p class="rubric">Examples</p>
 <p>This method loads data into a new Material:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.h5&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mat</span> <span class="o">=</span> <span class="n">from_text</span><span class="p">(</span><span class="s">&quot;natu.txt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
