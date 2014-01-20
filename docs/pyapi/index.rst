@@ -22,6 +22,7 @@ The following modules and sub-packages are discussed:
     ensdf
     xs/index
     transmute/index
+    kinf
     origen22
     serpent
     enrichment

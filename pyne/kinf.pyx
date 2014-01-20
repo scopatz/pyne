@@ -1,7 +1,7 @@
 """This module provides capabilities to solve for the k-infinitiy multiplication 
 factor.
 """
-
+from __future__ import print_function
 from warnings import warn
 
 from libc.math cimport fabs
@@ -15,6 +15,7 @@ def relax1g(double Sigma_f, double Sigma_a, double nu=2.43, double k0=1.0,
             double phi0=5e14, double tol=1e-7, int nmax=1000):
     """relax1g(double Sigma_f, double Sigma_a, double nu=2.43, double k0=1.0, 
                double phi0=5e14, double tol=1e-7, int nmax=1000)
+
     This is a simple one group iterative (relaxation) method for solving
     for the flux and the multiplication factor simeltaneously. This solves the 
     relative simple set of equations, where *n* is the iteration number:
@@ -57,18 +58,20 @@ def relax1g(double Sigma_f, double Sigma_a, double nu=2.43, double k0=1.0,
 
     """
     cdef int n = 0
-    cdef double k_
-    cdef double phi_
-    cdef double k1
-    cdef double phi1 
     cdef double coef = nu * Sigma_f / Sigma_a
+    cdef double k_ = 1.0
+    cdef double phi_ = 1.0
+    cdef double k1 = k0*0.9 
+    cdef double phi1 = phi0*0.9
+    print("k0={0}, k1={1}, phi0={2}, phi1={3}".format(k0, k1, phi0, phi1))
     while ((fabs(phi1/phi0 - 1.0) > tol) or (fabs(k1/k0 - 1.0) > tol)) and (n < nmax):
         k_ = k1
         phi_ = phi1
         phi1 = coef * phi0 / k0
-        k1 = k0 * phi1 / phi0 
+        k1 = k0 * (phi1 / phi0 + 1)
         k0 = k_
         phi0 = phi_
+        print("k0={0}, k1={1}, phi0={2}, phi1={3}".format(k0, k1, phi0, phi1))
         n += 1
     if n == nmax:
         warn("maximum number of iterations ({0}) reached".format(nmax), RuntimeWarning)
