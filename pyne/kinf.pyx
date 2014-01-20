@@ -68,7 +68,7 @@ def relax1g(double Sigma_f, double Sigma_a, double nu=2.43, double k0=1.0,
         k_ = k1
         phi_ = phi1
         phi1 = coef * phi0 / k0
-        k1 = k0 * (phi1 / phi0 + 1)
+        k1 = k0 * phi1 / phi0
         k0 = k_
         phi0 = phi_
         print("k0={0}, k1={1}, phi0={2}, phi1={3}".format(k0, k1, phi0, phi1))
