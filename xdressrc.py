@@ -1,3 +1,4 @@
+from xdress.utils import apiname
 package = 'pyne'
 packagedir = 'pyne'
 
@@ -23,6 +24,6 @@ stlcontainers = [
 
 #stlcontainers_module = 'stlcontainers'
 
-classes = []
+classes = [apiname('*', 'cpp/ransampl.*', language='c')]
 
-functions = []
+functions = [apiname('*', 'cpp/ransampl.*', language='c')]
