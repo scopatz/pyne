@@ -25,7 +25,7 @@
 #endif
 __BEGIN_DECLS
 
-typedef struct {
+typedef struct ransampl_ws {
     int n;
     int* alias;
     double* prob;

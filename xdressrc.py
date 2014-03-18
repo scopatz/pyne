@@ -26,4 +26,8 @@ stlcontainers = [
 
 classes = [apiname('*', 'cpp/ransampl.*', language='c')]
 
-functions = [apiname('*', 'cpp/ransampl.*', language='c')]
+functions = [
+    #apiname('*', 'cpp/ransampl.*', language='c'),
+    apiname('ransampl_set', 'cpp/ransampl.*', incfiles="ransampl.h", language='c'),
+    apiname('ransampl_draw', 'cpp/ransampl.*', incfiles="ransampl.h", language='c'),
+    ]

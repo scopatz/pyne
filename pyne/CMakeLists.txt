@@ -21,7 +21,12 @@ cython_add_module(dtypes dtypes.pyx)
 set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/stlcontainers.pyx"
                             PROPERTIES CYTHON_IS_CXX TRUE)
 cython_add_module(stlcontainers stlcontainers.pyx)
-                            
+
+# randsampl
+#set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/randsampl.pyx")
+cython_add_module(ransampl ransampl.pyx)
+target_link_libraries(ransampl pyne_ransampl)
+
 # jsoncpp
 set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/jsoncpp.pyx"
                             PROPERTIES CYTHON_IS_CXX TRUE)
