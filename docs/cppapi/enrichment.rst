@@ -1,7 +1,7 @@
 Enrichement -- ``libpyne_enrichment``
 =====================================
 
-.. autodoxygenindex:: 
+.. autodoxygenfile:: 
     enrichment.h
     enrichment_symbolic.h
     enrichment_cascade.h

@@ -1,5 +1,5 @@
 Reaction Naming -- ``libpyne_rxname``
 =====================================
 
-.. autodoxygenindex:: rxname.h
+.. autodoxygenfile:: rxname.h
     :source: pyne

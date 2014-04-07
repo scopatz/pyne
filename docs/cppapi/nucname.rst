@@ -1,6 +1,6 @@
 Nuclide Naming -- ``libpyne_nucname``
 =====================================
 
-.. autodoxygenindex:: nucname.h
+.. autodoxygenfile:: nucname.h
     :source: pyne
 

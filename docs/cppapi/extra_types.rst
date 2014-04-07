@@ -1,5 +1,5 @@
 Extra Data Types (header only)
 =====================================
 
-.. autodoxygenindex:: extra_types.h
+.. autodoxygenfile:: extra_types.h
     :source: pyne
