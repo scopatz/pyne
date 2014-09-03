@@ -1367,6 +1367,51 @@ def write_tape9(tape9, outfile="TAPE9.INP", precision=3):
     if opened_here:
         outfile.close()
 
+_declib_computers = {
+    'half_life': data.half_life, 
+    'frac_beta_minus_x', 
+    'frac_beta_plus_or_electron_capture', 'frac_beta_plus_or_electron_capture_x', 
+    'frac_alpha', 'frac_isomeric_transition', 'frac_spont_fiss', 'frac_beta_n', 
+    'recoverable_energy', 'frac_natural_abund', 'inhilation_concentration', 
+    'ingestion_concentration')
+    }
+
+def declibs(nucs=None, nlb=(1, 2, 3), verbose=False):
+    """Generates a TAPE9 dictionary of decay data for a set of nuclides.
+
+    Parameters
+    ----------
+    nucs : iterable of ints, optional
+        Set of nuclides in id form
+    nlb : length-3 sequence of ints
+        Library numbers for activation products, actinides & daugthers, and fission
+        products respectively.
+    verbose : bool, optional
+        Flag to print status as we go.
+
+    Returns
+    -------
+    t9 : dict
+        The data needed for a TAPE9 file.
+    """
+    nucs = nucs or NUCS
+    nucs = sorted(nucs)
+    t9 = {nlb[0]: {'_type': 'decay',
+                   'title': 'PyNE Decay Data for Activation Products'}, 
+          nlb[1]: {'_type': 'decay',
+                   'title': 'PyNE Decay Data for Actinides & Daughters'}, 
+          nlb[2]: {'_type': 'decay',
+                   'title': 'PyNE Decay Data for Fission Products'}, 
+          }
+    for nlb, lib in t9.items():
+        for field in DECAY_FIELDS:
+            libfield = lib[field] = {}
+            f = _declib_computers[field]
+            for nuc in nucs:
+                key = nucname.zzaaam(nuc)
+                libfield[key] = f(nuc)
+    return t9 
+
 _fyp_present = {'activation_products': False,  'actinides': False, 
     'fission_products': True,}
 
@@ -1402,7 +1447,7 @@ def _compute_xslib(nuc, key, lib, xscache):
             continue
         data[key] = _xslib_computers[field](nuc, xscache)
 
-def xslibs(nucs=NUCS, xscache=None, nlb=(201, 202, 203), verbose=False):
+def xslibs(nucs=None, xscache=None, nlb=(201, 202, 203), verbose=False):
     """Generates a TAPE9 dictionary of cross section & fission product yield data
     for a set of nuclides.
 
@@ -1423,11 +1468,15 @@ def xslibs(nucs=NUCS, xscache=None, nlb=(201, 202, 203), verbose=False):
     t9 : dict
         The data needed for a TAPE9 file.
     """
+    nucs = nucs or NUCS
     if xscache is None:
         xscache = cache.xs_cache
     old_flux = xscache.get('phi_g', None)
     old_group_struct = xscache.get('E_g', None)
-    xscache['E_g'] = [10.0, 1e-7]
+    set_group_struct = False
+    if old_group_struct is None or len(old_group_struct) != 2:
+        xscache['E_g'] = [10.0, 1e-7]
+        set_group_struct = True
     nucs = sorted(nucs)
 
     # setup tape9
@@ -1459,8 +1508,10 @@ def xslibs(nucs=NUCS, xscache=None, nlb=(201, 202, 203), verbose=False):
             _compute_xslib(nuc, key, t9[nlb[1]], xscache)
         if nuc in FISSION_PRODUCT_NUCS:
             _compute_xslib(nuc, key, t9[nlb[2]], xscache)
-    xscache['E_g'] = old_group_struct
-    xscache['phi_g'] = old_flux
+
+    if set_group_struct:
+        xscache['E_g'] = old_group_struct
+        xscache['phi_g'] = old_flux
     return t9
 
 
