@@ -1,5 +1,7 @@
 Nuclear Data -- ``libpyne_data``
 =====================================
 
-.. autodoxygenindex:: data.h
-    :source: pyne_data
+.. NOTE: you must add an entry to the breathe_projects_source dict in conf.py!
+
+.. autodoxygenindex:: 
+    :project: pyne_data

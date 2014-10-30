@@ -16,10 +16,18 @@ import warnings
 
 from pyne.utils import VnVWarning
 
+import breathe
+print("Breathe Version: " + breathe.__version__)
+print("Breathe Location: " + breathe.__file__)
+
 warnings.simplefilter("ignore", VnVWarning)
 # -- General configuration -----------------------------------------------------
 
-sys.path.insert(0, os.path.dirname(__file__))
+THIS_DIR = os.path.dirname(__file__)
+#SRC_DIR = os.path.join(THIS_DIR, '..', 'src')
+SRC_DIR = os.path.join('..', 'src')
+
+sys.path.insert(0, THIS_DIR)
 
 extensions = ['sphinx.ext.autodoc', 
               'sphinx.ext.doctest', 
@@ -252,12 +260,26 @@ autosummary_generate = []
 breathe_projects = {"pyne": None,}
 breathe_default_project = 'pyne'
 breathe_domain_by_extension = {"h": "cpp",}
-breathe_projects_source = {"pyne": '../src',}
+breathe_projects_source = {#"pyne": SRC_DIR,
+    'pyne_data': (SRC_DIR, ['data.h']),
+    'pyne_enrichment': (SRC_DIR, ['enrichment.h', 'enrichment_symbolic.h', 
+                                  'enrichment_cascade.h']),
+    'pyne_extra_types': (SRC_DIR, ['extra_types.h']),
+    'pyne_h5wrap': (SRC_DIR, ['h5wrap.h']),
+    'pyne_material': (SRC_DIR, ['material.h']),
+    'pyne_nucname': (SRC_DIR, ['nucname.h']),
+    'pyne_particle': (SRC_DIR, ['particle.h']),
+    'pyne_pyne': (SRC_DIR, ['pyne.h']),
+    'pyne_rxname': (SRC_DIR, ['rxname.h']),
+    }
 
-for p in os.listdir(breathe_projects_source['pyne']):
-    p, _ = os.path.splitext(p)
-    breathe_projects['pyne_' + p] = breathe_projects['pyne']
-    breathe_projects_source['pyne_' + p] = breathe_projects_source['pyne']
+#for p in os.listdir(breathe_projects_source['pyne']):
+#    p, _ = os.path.splitext(p)
+#    breathe_projects['pyne_' + p] = breathe_projects['pyne']
+#    breathe_projects_source['pyne_' + p] = (breathe_projects_source['pyne'], 
+#        [p + '.h'])
+#        #[os.path.join(THIS_DIR, p + '.h')])
+#    print(breathe_projects_source['pyne_' + p])
 
 # Prevent numpy from making silly tables 
 numpydoc_show_class_members = False

@@ -1,5 +1,7 @@
 h5wrap: An HDF5 Wrapper (header only)
 =====================================
 
-.. autodoxygenindex:: h5wrap.h
-    :source: pyne_h5wrap
+.. NOTE: you must add an entry to the breathe_projects_source dict in conf.py!
+
+.. autodoxygenindex::
+    :project: pyne_h5wrap

@@ -4,6 +4,8 @@ The following nuclide naming forms are supported:
 
 .. include:: ../nucnameforms.rst
 
-.. autodoxygenindex:: nucname.h
-    :source: pyne_nucname
+.. NOTE: you must add an entry to the breathe_projects_source dict in conf.py!
+
+.. autodoxygenindex::
+    :project: pyne_nucname
 

@@ -1,5 +1,7 @@
 PyNE Globals -- ``libpyne``
 =====================================
 
-.. autodoxygenindex:: pyne.h
-    :source: pyne_pyne
+.. NOTE: you must add an entry to the breathe_projects_source dict in conf.py!
+
+.. autodoxygenindex:: 
+    :project: pyne_pyne
