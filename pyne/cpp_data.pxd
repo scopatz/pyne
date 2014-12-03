@@ -116,9 +116,13 @@ cdef extern from "data.h" namespace "pyne":
     double decay_const(std_string) except +
 
     double branch_ratio(pair[int, int]) except +
+    double branch_ratio(pair[int, int], bint) except +
     double branch_ratio(int, int) except +
+    double branch_ratio(int, int, bint) except +
     double branch_ratio(char *, char *) except +
+    double branch_ratio(char *, char *, bint) except +
     double branch_ratio(std_string, std_string) except +
+    double branch_ratio(std_string, std_string, bint) except +
 
     double state_energy(int) except +
     double state_energy(char *) except +

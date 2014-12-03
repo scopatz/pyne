@@ -133,6 +133,10 @@ def test_branch_ratio():
         obs = data.branch_ratio('U235', child)
         assert_true(obs >= 0.0 and obs <= 1.0)
 
+def test_branch_ratio_nans():
+    #assert_equal(data.branch_ratio(230600000, 240600000), 0.0)
+    assert_true(np.isnan(data.branch_ratio(250660000, 260660000, preserve_nans=True)))
+
 
 def test_state_energy():
     assert_equal(data.state_energy('H1'), 0.0)

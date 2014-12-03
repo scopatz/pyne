@@ -909,7 +909,7 @@ def decay_const(nuc, use_metastable=True):
     return dc
 
 
-def branch_ratio(from_nuc, to_nuc, use_metastable=True):
+def branch_ratio(from_nuc, to_nuc, use_metastable=True, bint preserve_nans=False):
     """Finds a branch ratio for a from -> to nuclide pair [fraction].
 
     Parameters
@@ -919,8 +919,11 @@ def branch_ratio(from_nuc, to_nuc, use_metastable=True):
     to_nuc : int or str
         Child nuclide, if metastable is false this uses state id
     use_metastable : bool
-        Assume state of input nuc_id refers to metastable state. Defaults to
-        True.
+        Assume state of input nuc_id refers to metastable state. 
+        Defaults to True.
+    preserve_nans : bool
+        NaNs may be returned, rather than zeros, for entries where there is 
+        an ENSDF entry but no ratio given. Defaults to False.
 
     Returns
     -------
@@ -957,7 +960,7 @@ def branch_ratio(from_nuc, to_nuc, use_metastable=True):
     else:
         raise pyne.nucname.NucTypeError(to_nuc)
 
-    br = cpp_data.branch_ratio(cpp_pair[int, int](fn, tn))
+    br = cpp_data.branch_ratio(cpp_pair[int, int](fn, tn), preserve_nans)
     return br
 
 

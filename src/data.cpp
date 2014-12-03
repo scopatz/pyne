@@ -1603,7 +1603,7 @@ double pyne::half_life(std::string nuc) {
 //
 // Branch ratio data
 //
-double pyne::branch_ratio(std::pair<int, int> from_to) {
+double pyne::branch_ratio(std::pair<int, int> from_to, bool preserve_nans) {
   using std::vector;
   using pyne::nucname::groundstate;
   // make sure spontaneous fission data is loaded
@@ -1634,22 +1634,25 @@ double pyne::branch_ratio(std::pair<int, int> from_to) {
       result += part2[i] * 0.01;
     }
   }
+  if (!preserve_nans && isnan(result))
+    result = 0.0;
   return result;
 }
 
-double pyne::branch_ratio(int from_nuc, int to_nuc) {
+double pyne::branch_ratio(int from_nuc, int to_nuc, bool preserve_nans) {
   return branch_ratio(std::pair<int, int>(nucname::id(from_nuc),
-                                          nucname::id(to_nuc)));
+                                          nucname::id(to_nuc)), preserve_nans);
 };
 
-double pyne::branch_ratio(char * from_nuc, char * to_nuc) {
+double pyne::branch_ratio(char * from_nuc, char * to_nuc, bool preserve_nans) {
   return branch_ratio(std::pair<int, int>(nucname::id(from_nuc),
-                                          nucname::id(to_nuc)));
+                                          nucname::id(to_nuc)), preserve_nans);
 };
 
-double pyne::branch_ratio(std::string from_nuc, std::string to_nuc) {
+double pyne::branch_ratio(std::string from_nuc, std::string to_nuc,
+                          bool preserve_nans) {
   return branch_ratio(std::pair<int, int>(nucname::id(from_nuc),
-                                          nucname::id(to_nuc)));
+                                          nucname::id(to_nuc)), preserve_nans);
 };
 
 std::map<std::pair<int, int>, pyne::decay> pyne::decay_data = \

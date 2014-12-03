@@ -445,13 +445,16 @@ namespace pyne
   /// This function works by first checking the branch_ratio_map.  If this is empty it
   /// loads the data from disk.  If the parent/child nuclide pair is still not found,
   /// then the decay is assumed to be impossible and 0.0 is returned.
-  double branch_ratio(std::pair<int, int> from_to);
+  /// \param preserve_nans NaNs may be returned, rather than zeros, for entries 
+  /// where there is an ENSDF entry but no ratio given.
+  double branch_ratio(std::pair<int, int> from_to, bool preserve_nans=false);
   /// Returns the branch ratio for a parent/child nuclide pair.
-  double branch_ratio(int from_nuc, int to_nuc);
+  double branch_ratio(int from_nuc, int to_nuc, bool preserve_nans=false);
   /// Returns the branch ratio for a parent/child nuclide pair.
-  double branch_ratio(char * from_nuc, char * to_nuc);
+  double branch_ratio(char * from_nuc, char * to_nuc, bool preserve_nans=false);
   /// Returns the branch ratio for a parent/child nuclide pair.
-  double branch_ratio(std::string from_nuc, std::string to_nuc);
+  double branch_ratio(std::string from_nuc, std::string to_nuc, 
+    bool preserve_nans=false);
 
   /// \brief Returns the excitation energy [MeV] of a \a nuc in a given state.
   ///
