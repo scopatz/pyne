@@ -1,6 +1,6 @@
 # Defines the CMake commands/policies
 cmake_minimum_required( VERSION 2.8.5 )
-SET(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
+SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
 
 # Set the project name
 project( pyne Fortran CXX)
