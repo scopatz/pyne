@@ -5,7 +5,9 @@ It is suppossed to be fast.
 import os
 import io
 import sys
+import pdb
 import warnings
+import traceback
 from argparse import ArgumentParser, Namespace
 
 import numpy as np
@@ -173,45 +175,74 @@ def genchains(chains, sf=False):
     return chains
 
 
-def k_a(chain, short=1e-16):
-    # gather data
-    hl = np.array([half_life(n, False) for n in chain])
-    a = -1.0 / hl
-    dc = np.array(list(map(lambda nuc: decay_const(nuc, False), chain)))
-    if np.isnan(dc).any():
-        # NaNs are bad, mmmkay. Nones mean we should skip
-        return None, None
-    ends_stable = (dc[-1] < 1e-16)  # check if last nuclide is a stable species
-    # compute cij -> ci in prep for k
-    cij = dc[:, np.newaxis] / (dc[:, np.newaxis] - dc)
-    if ends_stable:
-        cij[-1] = -1.0 / dc  # adjustment for stable end nuclide
-    mask = np.ones(len(chain), dtype=bool)
-    cij[mask, mask] = 1.0  # identity is ignored, set to unity
-    ci = cij.prod(axis=0)
+def k_from_hl_stable(hl, gamma):
+    C = len(hl)
+    outer = 1 / (hl[:C-1] - hl[:C-1, np.newaxis])
+    # identity is ignored, set to unity
+    mask = np.ones(C-1, dtype=bool)
+    outer[mask, mask] = 1.0
+    # end nuclide is stable so ignore
+    # collapse by taking the product
+    p = outer.prod(axis=0)
+    k = -gamma * p * hl[:-1]**(C-2)
+    k = np.append(k, gamma)
+    return k
+
+
+def k_from_hl_unstable(hl, gamma):
+    outer = 1 / (hl - hl[:, np.newaxis])
+    # identity is ignored, set to unity
+    mask = np.ones(len(hl), dtype=bool)
+    outer[mask, mask] = 1.0
+    # collapse by taking the product
+    p = outer.prod(axis=0)
+    # get the other pieces
+    C = len(hl)
+    T_C = hl[-1]
+    T_i_C = hl**(C - 2)
     # compute k
+    k = (gamma * T_C) * T_i_C * p
+    return k
+
+
+def k_filter(k, short=1e-16):
+    k_not_inf_or_nan = np.bitwise_and(~np.isinf(k), ~np.isnan(k))
+    if k_not_inf_or_nan.sum() == 0:
+        return k_not_inf_or_nan
+    k_abs = np.abs(k)
+    k_max = k_abs[k_not_inf_or_nan].max()
+    k_filt = (k_abs / k_max) > short
+    k_filt = np.bitwise_and(k_filt, k_not_inf_or_nan)
+    return k_filt
+
+
+def hl_filter(hl, short=1e-16):
+    ends_stable = np.isinf(hl[-1])
     if ends_stable:
-        k = dc * ci
-        k[-1] = 1.0
+        hl_filt = (hl[:-1] / hl[:-1].sum()) > short
+        hl_filt = np.append(hl_filt, True)
     else:
-        k = (dc / dc[-1]) * ci
-    if np.isinf(k).any():
-        # if this happens then something wen very wrong, skip
-        return None, None
-    # compute and apply branch ratios
+        hl_filt = (hl / hl.sum()) > short
+    return hl_filt
+
+
+def k_a_from_hl(chain, short=1e-16):
+    hl = np.array([half_life(n, False) for n in chain])
+    hl = hl[~np.isnan(hl)]
+    a = -1.0 / hl
     gamma = np.prod([branch_ratio(p, c) for p, c in zip(chain[:-1], chain[1:])])
     if gamma == 0.0 or np.isnan(gamma):
         return None, None
-    k *= gamma
-    # half-life  filter, makes compiling faster by pre-ignoring negligible species
-    # in this chain. They'll still be picked up in their own chains.
+    ends_stable = np.isinf(hl[-1])
     if ends_stable:
-        mask = (hl[:-1] / hl[:-1].sum()) > short
-        mask = np.append(mask, True)
+        k = k_from_hl_stable(hl, gamma)
     else:
-        mask = (hl / hl.sum()) > short
-    if mask.sum() < 2:
-        mask = np.ones(len(chain), dtype=bool)
+        k = k_from_hl_unstable(hl, gamma)
+    # filtering makes compiling faster by pre-ignoring negligible species
+    # in this chain. They'll still be picked up in their own chains.
+    mask = k_filter(k, short=short)
+    if mask.sum() == 0:
+        return None, None
     return k[mask], a[mask]
 
 
@@ -233,6 +264,7 @@ def b_from_a(cse, a_i):
     bkey = EXP_EXPR.format(a=a_i)
     return cse[bkey]
 
+
 def chainexpr(chain, cse, b, bt, short=1e-16):
     child = chain[-1]
     if len(chain) == 1:
@@ -240,7 +272,7 @@ def chainexpr(chain, cse, b, bt, short=1e-16):
         b = ensure_cse(a_i, b, cse)
         terms = B_EXPR.format(b=b_from_a(cse, a_i))
     else:
-        k, a = k_a(chain, short=short)
+        k, a = k_a_from_hl(chain, short=short)
         if k is None:
             return None, b, bt
         terms = []
@@ -277,7 +309,7 @@ def gencase(nuc, idx, b, short=1e-16, sf=False):
         case.append(CHAIN_STMT.format(idx[nuc], 'it->second'))
     else:
         chains = genchains([(nuc,)], sf=sf)
-        print(len(chains), len(set(chains)), nuc)
+        print('{} has {} chains'.format(nucname.name(nuc), len(set(chains))))
         cse = {}  # common sub-expression exponents to elimnate
         bt = 0
         for c in chains:
@@ -359,6 +391,7 @@ def write_if_diff(filename, contents):
 def build(hdr='decay.h', src='decay.cpp', nucs=None, short=1e-16, sf=False,
           dummy=False):
     nucs = load_default_nucs() if nucs is None else list(map(nucname.id, nucs))
+    #nucs = nucs[:200]
     h, s = genfiles(nucs, short=short, sf=sf, dummy=dummy)
     write_if_diff(hdr, h)
     write_if_diff(src, s)
@@ -389,8 +422,14 @@ def main():
                        help='Does not build the source code.')
     ns = parser.parse_args()
     if ns.build:
-        build(hdr=ns.hdr, src=ns.src, nucs=ns.nucs, short=ns.short, sf=ns.sf,
-              dummy=ns.dummy)
+        try:
+            build(hdr=ns.hdr, src=ns.src, nucs=ns.nucs, short=ns.short, sf=ns.sf,
+                  dummy=ns.dummy)
+        except Exception:
+            type, value, tb = sys.exc_info()
+            traceback.print_exc()
+            pdb.post_mortem(tb)
+
     if ns.tar:
         print("building decay.tar.gz ...")
         build_tarfile(ns)
